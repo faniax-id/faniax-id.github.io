@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faniax — All-Rounder IT SaaS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-surface: #100f1a;
+            --bg-card: #15131f;
+            --bg-elevated: #1c1929;
+            --accent-soft: #b794f4;
+            --accent-mid: #9f7aea;
+            --accent-deep: #7c3aed;
+            --accent-glow: #a78bfa40;
+            --accent-subtle: #a78bfa1a;
+            --text-primary: #f4f2f9;
+            --text-secondary: #b0adc2;
+            --text-muted: #6e6a82;
+            --border-subtle: #1e1b2e;
+            --border-active: #7c3aed60;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 28px;
+            --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+            --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            --transition-fast: 180ms cubic-bezier(0.22, 1, 0.36, 1);
+            --transition-smooth: 420ms cubic-bezier(0.22, 1, 0.36, 1);
+            --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 0 1px var(--accent-glow), 0 8px 32px rgba(124, 58, 237, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--bg-primary);
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Subtle Ambient Background ────────────────── */
+        .ambient-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.18;
+        }
+        .ambient-glow--top {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-deep) 0%, transparent 70%);
+            top: -250px;
+            right: -200px;
+        }
+        .ambient-glow--bottom {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-mid) 0%, transparent 70%);
+            bottom: -200px;
+            left: -150px;
+            opacity: 0.12;
+        }
+
+        /* ── Main Content ─────────────────────────────── */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ── Navigation ──────────────────────────────── */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.4rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: transparent;
+            transition: all var(--transition-smooth);
+            border-bottom: 1px solid transparent;
+        }
+        .nav--scrolled {
+            background: rgba(10, 10, 15, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom-color: var(--border-subtle);
+            padding: 0.9rem 0;
+        }
+        .nav__logo {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: color var(--transition-fast);
+        }
+        .nav__logo:hover {
+            color: var(--accent-soft);
+        }
+        .nav__logo-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-mid);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px var(--accent-glow);
+            transition: box-shadow var(--transition-fast);
+        }
+        .nav__logo:hover .nav__logo-dot {
+            box-shadow: 0 0 18px var(--accent-soft);
+        }
+        .nav__link {
+            font-family: var(--font-sans);
+            font-weight: 500;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.55rem 1.4rem;
+            border-radius: 40px;
+            background: var(--bg-elevated);
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-subtle);
+        }
+        .nav__link:hover {
+            color: #fff;
+            background: var(--accent-deep);
+            border-color: var(--accent-deep);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-1px);
+        }
+
+        /* ── Hero ─────────────────────────────────────── */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 85vh;
+            padding: 2rem 0 3rem;
+            position: relative;
+        }
+        .hero__badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-soft);
+            background: var(--accent-subtle);
+            padding: 0.35rem 1rem;
+            border-radius: 30px;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-active);
+            opacity: 0;
+            animation: fadeUp 0.65s 0.1s forwards;
+        }
+        .hero__title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(3.8rem, 8vw, 5.8rem);
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            max-width: 800px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeUp 0.65s 0.2s forwards;
+        }
+        .hero__title-accent {
+            color: var(--accent-soft);
+            position: relative;
+        }
+        .hero__title-accent::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--accent-deep);
+            opacity: 0.3;
+            z-index: -1;
+            border-radius: 4px;
+            transition: opacity var(--transition-fast), height var(--transition-fast);
+        }
+        .hero__title-accent:hover::after {
+            opacity: 0.6;
+            height: 12px;
+        }
+        .hero__subtitle {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.65s 0.3s forwards;
+        }
+        .hero__actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.65s 0.4s forwards;
+        }
+        .btn {
+            font-family: var(--font-sans);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: inherit;
+        }
+        .btn--primary {
+            background: var(--accent-deep);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+        }
+        .btn--primary:hover {
+            background: #8b5cf6;
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
+            transform: translateY(-2px);
+        }
+        .btn--ghost {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+        .btn--ghost:hover {
+            border-color: var(--accent-mid);
+            background: var(--accent-subtle);
+            color: #fff;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Stats Row ────────────────────────────────── */
+        .stats-row {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.65s 0.5s forwards;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-value {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.8rem;
+            color: var(--accent-soft);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ── SatuVPN Showcase ─────────────────────────── */
+        .showcase {
+            padding: 5rem 0;
+        }
+        .showcase__label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-soft);
+            margin-bottom: 0.6rem;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: all var(--transition-smooth);
+        }
+        .showcase__label--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .showcase__heading {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: clamp(2.2rem, 4.5vw, 3rem);
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: all var(--transition-smooth) 0.1s;
+        }
+        .showcase__heading--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .showcase-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-surface);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            transition: all var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(20px);
+            box-shadow: var(--shadow-card);
+        }
+        .showcase-card--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .showcase-card:hover {
+            border-color: var(--border-active);
+            box-shadow: var(--shadow-glow), var(--shadow-card);
+        }
+
+        .showcase-card__visual {
+            background: linear-gradient(135deg, #1a1530 0%, #120e22 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .vpn-illustration {
+            position: relative;
+            width: 160px;
+            height: 160px;
+        }
+        .vpn-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid var(--accent-mid);
+            opacity: 0.25;
+            animation: circlePulse 4s ease-in-out infinite;
+        }
+        .vpn-circle:nth-child(1) {
+            inset: 0;
+            animation-delay: 0s;
+        }
+        .vpn-circle:nth-child(2) {
+            inset: 20px;
+            animation-delay: -1s;
+            opacity: 0.4;
+        }
+        .vpn-circle:nth-child(3) {
+            inset: 40px;
+            animation-delay: -2s;
+            opacity: 0.6;
+            border-color: var(--accent-soft);
+        }
+        .vpn-shield {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            z-index: 2;
+            filter: drop-shadow(0 0 12px var(--accent-glow));
+        }
+        @keyframes circlePulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.25;
+            }
+            50% {
+                transform: scale(1.08);
+                opacity: 0.5;
+            }
+        }
+
+        .showcase-card__info {
+            padding: 2.5rem 2.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .showcase-card__tag {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-soft);
+            background: var(--accent-subtle);
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            align-self: flex-start;
+            margin-bottom: 0.9rem;
+        }
+        .showcase-card__title {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.02em;
+        }
+        .showcase-card__url {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .showcase-card__url-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--accent-mid);
+            border-radius: 50%;
+        }
+        .showcase-card__desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .showcase-card__features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.8rem;
+        }
+        .feature-pill {
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+            background: var(--bg-elevated);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            transition: all var(--transition-fast);
+        }
+        .feature-pill:hover {
+            border-color: var(--accent-mid);
+            color: #fff;
+            background: var(--accent-subtle);
+        }
+        .showcase-card__link {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent-deep);
+            padding: 0.7rem 1.6rem;
+            border-radius: 30px;
+            align-self: flex-start;
+            transition: all var(--transition-fast);
+        }
+        .showcase-card__link:hover {
+            background: #8b5cf6;
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+        }
+
+        /* ── Services Grid ────────────────────────────── */
+        .services {
+            padding: 3rem 0 5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .services__heading {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.8rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+        .service-item {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            transition: all var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(18px);
+            cursor: default;
+        }
+        .service-item--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .service-item:hover {
+            border-color: var(--border-active);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-glow);
+        }
+        .service-item__icon {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .service-item__title {
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: -0.01em;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+        .service-item__desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ── Footer ──────────────────────────────────── */
+        .footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--border-subtle);
+            gap: 1rem;
+        }
+        .footer__brand {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        .footer__copy {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+        .footer__link {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-soft);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        .footer__link:hover {
+            color: #fff;
+        }
+
+        /* ── Responsive ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0 1.25rem;
+            }
+            .hero {
+                min-height: auto;
+                padding: 3rem 0 2rem;
+            }
+            .hero__title {
+                font-size: 2.8rem;
+            }
+            .showcase-card {
+                grid-template-columns: 1fr;
+            }
+            .showcase-card__visual {
+                padding: 2rem;
+                min-height: 200px;
+            }
+            .showcase-card__info {
+                padding: 1.5rem;
+            }
+            .stats-row {
+                gap: 1.5rem;
+            }
+            .nav__link {
+                font-size: 0.75rem;
+                padding: 0.45rem 1rem;
+            }
+            .services-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero__title {
+                font-size: 2.2rem;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero__actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow ambient-glow--top" aria-hidden="true"></div>
+    <div class="ambient-glow ambient-glow--bottom" aria-hidden="true"></div>
+
+    <div class="main-content">
+        <!-- Navigation -->
+        <nav class="nav" id="nav">
+            <a href="#" class="nav__logo">Faniax<span class="nav__logo-dot"></span></a>
+            <a href="https://satuvpn.faniax.id" class="nav__link" target="_blank" rel="noopener">SatuVPN →</a>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <span class="hero__badge">All-Rounder IT SaaS</span>
+            <h1 class="hero__title">
+                Software that <span class="hero__title-accent">scales</span> with you
+            </h1>
+            <p class="hero__subtitle">
+                Faniax builds elegant SaaS tools for modern teams — from secure VPN access to productivity, collaboration, and cloud solutions.
+            </p>
+            <div class="hero__actions">
+                <a href="https://satuvpn.faniax.id" class="btn btn--primary" target="_blank" rel="noopener">
+                    Try SatuVPN <span>↗</span>
+                </a>
+                <a href="#services" class="btn btn--ghost">Explore Services</a>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-value">12+</span>
+                    <span class="stat-label">SaaS Products</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">99.9%</span>
+                    <span class="stat-label">Uptime SLA</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">50k+</span>
+                    <span class="stat-label">Active Users</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SatuVPN Showcase -->
+        <section class="showcase">
+            <p class="showcase__label" data-reveal>Featured Product</p>
+            <h2 class="showcase__heading" data-reveal>Secure connectivity, redefined</h2>
+            <div class="showcase-card" data-reveal>
+                <div class="showcase-card__visual">
+                    <div class="vpn-illustration">
+                        <div class="vpn-circle"></div>
+                        <div class="vpn-circle"></div>
+                        <div class="vpn-circle"></div>
+                        <div class="vpn-shield">🛡️</div>
+                    </div>
+                </div>
+                <div class="showcase-card__info">
+                    <span class="showcase-card__tag">Now Available</span>
+                    <h3 class="showcase-card__title">SatuVPN</h3>
+                    <p class="showcase-card__url">
+                        <span class="showcase-card__url-dot"></span> satuvpn.faniax.id
+                    </p>
+                    <p class="showcase-card__desc">
+                        Lightning-fast VPN with zero-log policy, multi-hop routing, and seamless integration across all your devices.
+                    </p>
+                    <div class="showcase-card__features">
+                        <span class="feature-pill">WireGuard®</span>
+                        <span class="feature-pill">End-to-End Encrypted</span>
+                        <span class="feature-pill">Global Nodes</span>
+                        <span class="feature-pill">Zero-Log</span>
+                        <span class="feature-pill">Multi-Hop</span>
+                    </div>
+                    <a href="https://satuvpn.faniax.id" class="showcase-card__link" target="_blank" rel="noopener">
+                        Access SatuVPN <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Grid -->
+        <section class="services" id="services">
+            <h3 class="services__heading">What we offer</h3>
+            <div class="services-grid">
+                <div class="service-item" data-reveal>
+                    <span class="service-item__icon">🔒</span>
+                    <h4 class="service-item__title">Privacy & Security</h4>
+                    <p class="service-item__desc">VPN, password managers, and encrypted storage for individuals and teams.</p>
+                </div>
+                <div class="service-item" data-reveal>
+                    <span class="service-item__icon">☁️</span>
+                    <h4 class="service-item__title">Cloud Productivity</h4>
+                    <p class="service-item__desc">Document collaboration, project management, and smart scheduling tools.</p>
+                </div>
+                <div class="service-item" data-reveal>
+                    <span class="service-item__icon">📊</span>
+                    <h4 class="service-item__title">Analytics & Insights</h4>
+                    <p class="service-item__desc">Real-time dashboards and AI-powered reporting for data-driven decisions.</p>
+                </div>
+                <div class="service-item" data-reveal>
+                    <span class="service-item__icon">⚡</span>
+                    <h4 class="service-item__title">Automation</h4>
+                    <p class="service-item__desc">Workflow automation and API integrations to streamline your operations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span class="footer__brand">Faniax</span>
+            <span class="footer__copy">© 2026 Faniax. All-rounder IT SaaS.</span>
+            <a href="https://satuvpn.faniax.id" class="footer__link" target="_blank" rel="noopener">satuvpn.faniax.id ↗</a>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            // Sticky nav background
+            const nav = document.getElementById('nav');
+            let ticking = false;
+
+            function updateNav() {
+                if (window.scrollY > 30) {
+                    nav.classList.add('nav--scrolled');
+                } else {
+                    nav.classList.remove('nav--scrolled');
+                }
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateNav);
+                    ticking = true;
+                }
+            });
+
+            // Intersection Observer for reveal animations
+            const revealEls = document.querySelectorAll('[data-reveal]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('showcase__label')) {
+                            entry.target.classList.add('showcase__label--visible');
+                        } else if (entry.target.classList.contains('showcase__heading')) {
+                            entry.target.classList.add('showcase__heading--visible');
+                        } else if (entry.target.classList.contains('showcase-card')) {
+                            entry.target.classList.add('showcase-card--visible');
+                        } else if (entry.target.classList.contains('service-item')) {
+                            entry.target.classList.add('service-item--visible');
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '0px 0px -40px 0px', threshold: 0.1 });
+
+            revealEls.forEach(el => observer.observe(el));
+
+            // Initial nav state
+            updateNav();
+        })();
+    </script>
+</body>
+</html>
